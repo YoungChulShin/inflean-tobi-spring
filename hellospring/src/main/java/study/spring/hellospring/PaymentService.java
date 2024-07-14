@@ -16,7 +16,6 @@ public class PaymentService {
     BigDecimal exRate = exRateProvider.getExRate(currency);
     BigDecimal convertedAmount = foreignCurrencyAmount.multiply(exRate);
     LocalDateTime validUntil = LocalDateTime.now().plusMinutes(30);
-
     return new Payment(orderId, currency, foreignCurrencyAmount, exRate, convertedAmount, validUntil);
   }
 }
