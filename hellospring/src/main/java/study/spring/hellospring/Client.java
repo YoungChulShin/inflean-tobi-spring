@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import study.spring.hellospring.payment.Payment;
+import study.spring.hellospring.payment.PaymentService;
 
 public class Client {
 

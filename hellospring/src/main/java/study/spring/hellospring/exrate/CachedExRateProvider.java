@@ -1,8 +1,9 @@
-package study.spring.hellospring;
+package study.spring.hellospring.exrate;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import study.spring.hellospring.payment.ExRateProvider;
 
 public class CachedExRateProvider implements ExRateProvider {
 
