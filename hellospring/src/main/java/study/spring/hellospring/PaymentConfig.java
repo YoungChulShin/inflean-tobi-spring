@@ -1,18 +1,18 @@
 package study.spring.hellospring;
 
+import java.time.Clock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import study.spring.hellospring.exrate.CachedExRateProvider;
 import study.spring.hellospring.payment.ExRateProvider;
 import study.spring.hellospring.exrate.WebApiExRateProvider;
 import study.spring.hellospring.payment.PaymentService;
 
 @Configuration
-public class ObjectFactory {
+public class PaymentConfig {
 
   @Bean
   public PaymentService paymentService() {
-    return new PaymentService(exRateProvider());
+    return new PaymentService(exRateProvider(), clock());
   }
 
   @Bean
@@ -20,9 +20,8 @@ public class ObjectFactory {
     return new WebApiExRateProvider();
   }
 
-//  @Bean
-//  public ExRateProvider cachedExRateProvider() {
-//    return new CachedExRateProvider(exRateProvider());
-//  }
-
+  @Bean
+  public Clock clock() {
+    return Clock.systemDefaultZone();
+  }
 }
