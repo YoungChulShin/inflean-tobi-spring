@@ -22,7 +22,7 @@ class PaymentServiceSpringTest {
   private Clock clock;
 
   @Test
-  void convertAmount() throws IOException {
+  void convertAmount() {
     Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
 
     Assertions.assertThat(payment.getExRate()).isEqualByComparingTo(valueOf(1_000));

@@ -17,7 +17,7 @@ public class CachedExRateProvider implements ExRateProvider {
   }
 
   @Override
-  public BigDecimal getExRate(String currency) throws IOException {
+  public BigDecimal getExRate(String currency) {
     if (cachedExRate == null || cacheExpiaryTime.isBefore(LocalDateTime.now())) {
       cachedExRate = this.target.getExRate(currency);
       cacheExpiaryTime = LocalDateTime.now().plusSeconds(3);

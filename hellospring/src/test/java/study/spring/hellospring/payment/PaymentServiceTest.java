@@ -24,7 +24,7 @@ class PaymentServiceTest {
 
   @Test
   @DisplayName("prepare 메서드가 요구사항 3가지를 잘 충족했는지 검증")
-  void prepare() throws IOException {
+  void prepare() {
     testAmount(valueOf(500), valueOf(5000), this.clock);
     testAmount(valueOf(1_000), valueOf(10_000), this.clock);
     testAmount(valueOf(3_000), valueOf(30_000), this.clock);
@@ -35,7 +35,7 @@ class PaymentServiceTest {
   }
 
   @Test
-  void validUntil() throws IOException {
+  void validUntil() {
     PaymentService paymentService = new PaymentService(new ExRateProviderStub(valueOf(1_000)), clock);
 
     Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
@@ -46,7 +46,7 @@ class PaymentServiceTest {
     Assertions.assertThat(payment.getValidUntil()).isEqualTo(expectedValidUntil);
   }
 
-  private static void testAmount(BigDecimal exRate, BigDecimal convertedAmount, Clock clock) throws IOException {
+  private static void testAmount(BigDecimal exRate, BigDecimal convertedAmount, Clock clock) {
     PaymentService paymentService = new PaymentService(new ExRateProviderStub(exRate), clock);
 
     Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
