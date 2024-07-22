@@ -3,6 +3,7 @@ package study.spring.hellospring;
 import java.time.Clock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import study.spring.hellospring.api.ApiTemplate;
 import study.spring.hellospring.payment.ExRateProvider;
 import study.spring.hellospring.exrate.WebApiExRateProvider;
 import study.spring.hellospring.payment.PaymentService;
@@ -16,8 +17,13 @@ public class PaymentConfig {
   }
 
   @Bean
+  public ApiTemplate apiTemplate() {
+    return new ApiTemplate();
+  }
+
+  @Bean
   public ExRateProvider exRateProvider() {
-    return new WebApiExRateProvider();
+    return new WebApiExRateProvider(apiTemplate());
   }
 
   @Bean
