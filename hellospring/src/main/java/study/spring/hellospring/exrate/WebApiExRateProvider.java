@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
+import study.spring.hellospring.api.SimpleApiExecutor;
 import study.spring.hellospring.payment.ExRateProvider;
 
 @Component
@@ -19,6 +20,11 @@ public class WebApiExRateProvider implements ExRateProvider {
   @Override
   public BigDecimal getExRate(String currency) {
     String url = "https://open.er-api.com/v6/latest/" + currency;
+
+    return runApiForExRate(url);
+  }
+
+  private static BigDecimal runApiForExRate(String url) {
     URI uri;
     try {
       uri = new URI(url);
@@ -29,31 +35,21 @@ public class WebApiExRateProvider implements ExRateProvider {
     String response;
     try {
       // 변경될 것을 분리한다.
-      response = executeApi(uri);
+      response = new SimpleApiExecutor().execute(uri);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
 
     try {
-      return parseExRate(response);
+      return extractExRate(response);
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private static BigDecimal parseExRate(String response) throws JsonProcessingException {
+  private static BigDecimal extractExRate(String response) throws JsonProcessingException {
     ObjectMapper mapper = new ObjectMapper();
     ExRateData data = mapper.readValue(response, ExRateData.class);
     return data.rates().get("KRW");
-  }
-
-
-  private static String executeApi(URI uri) throws IOException {
-    String response;
-    HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-    try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-      response = br.lines().collect(Collectors.joining());
-    }
-    return response;
   }
 }
