@@ -9,8 +9,10 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
+import study.spring.hellospring.api.ApiExecutor;
+import study.spring.hellospring.api.ErApiExRateExtractor;
+import study.spring.hellospring.api.ExRateExtractor;
 import study.spring.hellospring.api.SimpleApiExecutor;
 import study.spring.hellospring.payment.ExRateProvider;
 
@@ -21,10 +23,10 @@ public class WebApiExRateProvider implements ExRateProvider {
   public BigDecimal getExRate(String currency) {
     String url = "https://open.er-api.com/v6/latest/" + currency;
 
-    return runApiForExRate(url);
+    return runApiForExRate(url, new SimpleApiExecutor(), new ErApiExRateExtractor());
   }
 
-  private static BigDecimal runApiForExRate(String url) {
+  private static BigDecimal runApiForExRate(String url, ApiExecutor apiExecutor, ExRateExtractor exRateExtractor) {
     URI uri;
     try {
       uri = new URI(url);
@@ -35,21 +37,15 @@ public class WebApiExRateProvider implements ExRateProvider {
     String response;
     try {
       // 변경될 것을 분리한다.
-      response = new SimpleApiExecutor().execute(uri);
+      response = apiExecutor.execute(uri);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
 
     try {
-      return extractExRate(response);
+      return exRateExtractor.extract(response);
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  private static BigDecimal extractExRate(String response) throws JsonProcessingException {
-    ObjectMapper mapper = new ObjectMapper();
-    ExRateData data = mapper.readValue(response, ExRateData.class);
-    return data.rates().get("KRW");
   }
 }
