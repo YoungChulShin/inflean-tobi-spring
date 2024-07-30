@@ -4,16 +4,15 @@ import java.math.BigDecimal;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
-import study.spring.hellospring.data.OrderRepository;
 
 @Service
 public class OrderService {
 
-  private final OrderRepository orderRepository;
+  private final OrderRepository orderJpaRepository;
   private final JpaTransactionManager transactionManager;
 
-  public OrderService(OrderRepository orderRepository, JpaTransactionManager transactionManager) {
-    this.orderRepository = orderRepository;
+  public OrderService(OrderRepository orderJpaRepository, JpaTransactionManager transactionManager) {
+    this.orderJpaRepository = orderJpaRepository;
     this.transactionManager = transactionManager;
   }
 
@@ -22,7 +21,7 @@ public class OrderService {
     Order order = new Order(no, total);
 
     return new TransactionTemplate(transactionManager).execute(status -> {
-      orderRepository.save(order);
+      orderJpaRepository.save(order);
       return order;
     });
   }
