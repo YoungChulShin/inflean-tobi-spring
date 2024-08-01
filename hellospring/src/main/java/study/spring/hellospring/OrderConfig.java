@@ -6,9 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.PlatformTransactionManager;
 import study.spring.hellospring.data.JdbcOrderRepository;
-import study.spring.hellospring.data.OrderJpaRepository;
 import study.spring.hellospring.order.OrderRepository;
 import study.spring.hellospring.order.OrderService;
+import study.spring.hellospring.order.OrderServiceImpl;
+import study.spring.hellospring.order.OrderServiceTxProxy;
 
 @Configuration
 @Import(DataConfig.class)
@@ -24,7 +25,9 @@ public class OrderConfig {
       PlatformTransactionManager transactionManager,
       OrderRepository orderRepository
   ) {
-    return new OrderService(orderRepository, transactionManager);
+    return new OrderServiceTxProxy(
+        new OrderServiceImpl(orderRepository),
+        transactionManager);
   }
 
 }
